@@ -37,7 +37,9 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/usuarios', usuariosRouter)
 app.use('/estudiante',estudianteRouter)
-app.use(auth)
+
+
+// app.use(auth)
 
 
 

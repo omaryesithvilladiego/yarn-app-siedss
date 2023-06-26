@@ -2,6 +2,8 @@ const Usuario = require("../models/usuarios.model")
 const crypto = require("crypto")
 const jwt = require("jsonwebtoken")
 
+
+
 exports.login = async function(req, res, next) {
     let hashedpass = crypto.createHash("sha512").update(req.body.pass).digest("hex")
     
@@ -9,6 +11,7 @@ exports.login = async function(req, res, next) {
         const data = await Usuario.findOne({
             usuario:req.body.usuario, pass:hashedpass
         })
+        
         let response = {
             token:null
         }
@@ -21,6 +24,7 @@ exports.login = async function(req, res, next) {
             )
         }
         res.json(response)
+        
     } catch (error) {
         console.log(err)
         
@@ -39,26 +43,41 @@ exports.create = async function(req,res) {
         usuario: req.body.usuario,
         pass: hashedpass
     })
-
     let response = {
         msg: "",
         exito:false
     
     }
 
+    
 
     try {
-        await usuarios.save()
-        response.exito = true
-        response.msg = "Guardado con exito"
-        res.json(response)
-    } catch (error) {
-        console.error(err),
-            response.exito = false,
-            response.msg = "Error al intentar Guardar el estudiante"
+        const userVeri = await Usuario.findOne({usuario: req.body.usuario})
+        console.log(userVeri)
+        if(userVeri === null) {
+            try {
+                await usuarios.save()
+                response.exito = true
+                response.msg = "Guardado con exito"
+                res.json(response)
+            } catch (error) {
+                console.error(err),
+                    response.exito = false,
+                    response.msg = "Error al intentar Guardar el estudiante"
+                    res.send(response)
+                    return;
+            }
+
+        } else {
+            response.msg = "El usuario que intenta registrar ya existe"
             res.send(response)
-            return;
+        }
+    } catch (error) {
+        console.log(error)
     }
+    
+
+    
 
    
     
