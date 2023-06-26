@@ -25,9 +25,10 @@ exports.create = async (req,res) =>
 
    
 
-    const verificarCorreo = await Estudiante.find({correoInstitucional:mail})
-    const checkCorreo = verificarCorreo === null ? false : true
-
+     let verificarCorreo = await Estudiante.findOne({correoInstitucional:mail})
+     console.log(verificarCorreo)
+     let checkCorreo = verificarCorreo == null ? true : false
+    console.log(checkCorreo)
     if(checkCorreo) {
         let estudiante = new Estudiante({
             nombres: req.body.nombres,
@@ -52,8 +53,15 @@ exports.create = async (req,res) =>
                body:'Este es tu codigo',
                text: "Este es tu usuario y contraseña",
                html: `<div> Tu usuario es: ${user}, tu contraseña es: ${pass}, se sugiere cambiar la contraseña al iniciar sesión </div>`
-           })
-           console.log(result)
+           },(err, info) => {
+            console.log(info.envelope);
+            console.log(info.messageId);
+            console.log(info.response)
+        });
+           
+           
+           
+          
         } catch (error) {
             console.error(error),
                 response.exito = false,
