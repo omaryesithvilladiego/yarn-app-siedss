@@ -11,6 +11,10 @@ const usuariosSchema = new Schema({
         type:String,
         require:true,
         max:120
+    },
+    estudianteId:{
+        type:String,
+        require:true
     }
 })
 

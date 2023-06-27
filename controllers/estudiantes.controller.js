@@ -3,14 +3,16 @@ const transporter = require('../helpers/mail')
 
 let response = {
     msg: "",
-    exito:false
+    exito:false,
+    _id: null
 }
 
 exports.getEstudiantes = async function(req,res, next)
 {
-    const estudiante = await Estudiante.find({nombres:"Omar"})
-    res.json(estudiante)  
-    const deleted = await Estudiante.deleteOne()
+    const idParams = req.params.id
+    const estudiante = await Estudiante.findOne({_id:idParams})
+    
+    res.json(estudiante)
 
         
 
@@ -26,9 +28,7 @@ exports.create = async (req,res) =>
    
 
      let verificarCorreo = await Estudiante.findOne({correoInstitucional:mail})
-     console.log(verificarCorreo)
      let checkCorreo = verificarCorreo == null ? true : false
-    console.log(checkCorreo)
     if(checkCorreo) {
         let estudiante = new Estudiante({
             nombres: req.body.nombres,
@@ -45,6 +45,9 @@ exports.create = async (req,res) =>
             await estudiante.save()
             response.exito = true
             response.msg = "Guardado con exito"
+            let obtenerId = await Estudiante.findOne({correoInstitucional:mail})
+            let idUser = obtenerId._id
+            response._id = idUser
             res.send(response)
             const result = await transporter.sendMail({
                from: "omar.villadiegoc@campusucc.edu.co",
@@ -75,6 +78,8 @@ exports.create = async (req,res) =>
         res.send(response)
         return;
     }
+
+   
 
     
      

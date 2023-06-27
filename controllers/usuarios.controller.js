@@ -13,9 +13,12 @@ exports.login = async function(req, res, next) {
         })
         
         let response = {
-            token:null
+            token:null,
+            data:data
+           
         }
         if(data !== null){
+            console.log(data)
             response.token = jwt.sign({
                 id: data.usuario._id,
                 usuario: data.usuario.usuario
@@ -41,7 +44,8 @@ exports.create = async function(req,res) {
 
     let usuarios = new Usuario({
         usuario: req.body.usuario,
-        pass: hashedpass
+        pass: hashedpass,
+        estudianteId:req.body.estudianteId
     })
     let response = {
         msg: "",
