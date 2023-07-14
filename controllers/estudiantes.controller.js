@@ -29,6 +29,7 @@ exports.create = async (req,res) =>
 
      let verificarCorreo = await Estudiante.findOne({correoInstitucional:mail})
      let checkCorreo = verificarCorreo == null ? true : false
+     console.log(checkCorreo)
     if(checkCorreo) {
         let estudiante = new Estudiante({
             nombres: req.body.nombres,

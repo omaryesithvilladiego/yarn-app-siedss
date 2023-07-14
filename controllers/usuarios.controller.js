@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken")
 
 
 
+
 exports.login = async function(req, res, next) {
     let hashedpass = crypto.createHash("sha512").update(req.body.pass).digest("hex")
     
@@ -85,5 +86,55 @@ exports.create = async function(req,res) {
 
    
     
+
+}
+
+exports.updatePassword  = async function(req,res) {
+    let response = {
+        msg: "",
+        exito:false
+    }
+
+    
+    let hashedpass = crypto.createHash("sha512").update(req.body.newPassword).digest("hex")
+   
+    const filter = { estudianteId: req.params.id};
+    
+    const update = { pass: hashedpass,
+    usuario:req.body.newUser};
+
+    try {
+        const userCheck = Usuario.findOne({usuario:req.body.newUser})
+        if(!(userCheck === null)) {
+            response.msg="No puede usar este nombre de usuario",
+            response.exito = false
+            res.send(response)
+        } else {
+            try {
+                const change = await Usuario.findOneAndUpdate(filter,update)
+               
+                response.msg = "Contraseña actualizada con exito"
+                response.exito = true
+                res.json(response)
+                
+            } catch (error) {
+                console.log(error)
+                response.msg = "Error al intentar actualizar la contraseña"
+                response.exito = false
+                res.json(response)
+            }
+            
+        }
+    } catch (error) { 
+        console.log(error)
+    }
+
+   
+   
+
+    
+
+
+
 
 }
